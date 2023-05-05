@@ -76,7 +76,7 @@ CREATE INDEX IF NOT EXISTS mag_type_index
 
 
 
-
+*********************************************************************************************************************************************************************
 
 
 **Retrieve Locations of specific features**
@@ -84,7 +84,8 @@ CREATE INDEX IF NOT EXISTS mag_type_index
 SELECT latitude, longitude, place
 FROM earthquakes_table
 WHERE mag >= 4.0 AND type = 'earthquake';
- 
+
+********************************************************************************************************************************************************************* 
 
 **Calculate Distance between points:**
 
@@ -92,7 +93,7 @@ SELECT id,place,  SQRT(POWER(69.1 * (latitude - 40.7128), 2) + POWER(69.1 * (-74
 FROM earthquakes_table
 ORDER BY distance ASC;
 
- 
+******************************************************************************************************************************************************************** 
 **Calculate Areas of Interest specific to each group**
 
 SELECT mag, ST_Area(ST_Transform(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), 3857)) as area 
@@ -103,7 +104,7 @@ HAVING COUNT(*) < 2;
 
  
 
-
+*************************************************************************************************************************************************************
 **Analyze the above queries:**
 Query 1
 SELECT latitude, longitude, place
@@ -161,7 +162,7 @@ LIMIT 10;                    -- Limit the number of results to 10
 
 This search will pull all columns from the earthquakes_table whose types are "earthquake" and whose magnitudes are greater than or equal to 4.0. The results are then being limited to 10 and sorted by the time column in descending order. The results of this search will show the ten most recent earthquakes with a magnitude of at least 4.0.
 
- 
+ **************************************************************************************************************************************************************
 **Optimization of queries for faster execution**
 
 Query  1
@@ -214,7 +215,7 @@ WHERE mag >= 4.0 AND type = 'earthquake';
 upon comparinng  the execution results of optmized query is 052 millisecond where original query had 148 millisecond as execution time, so optimized and faster than earlier.
 
 
-
+*****************************************************************************************************************************************************************
 **N optimization of the queries:**
 
 Beyond simple query optimization, N-optimization requires the use of more sophisticated optimization techniques. The following are some methods that can be applied:
