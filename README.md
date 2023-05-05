@@ -105,7 +105,7 @@ HAVING COUNT(*) < 2;
 
 
 **Analyze the above queries:**
-
+Query 1
 SELECT latitude, longitude, place
 FROM earthquakes_table
 WHERE mag >= 4.0 AND type = 'earthquake';
@@ -113,6 +113,8 @@ WHERE mag >= 4.0 AND type = 'earthquake';
 Explanation:
 With a magnitude of at least 4.0 and a "earthquake" type, this query chooses the latitude, longitude, and location from the earthquakes_table. This search is probably used to retrieve data on earthquakes that are notable in terms of magnitude. The place can be used to provide extra information about the earthquake's location, such as the name of the closest city or landmark, while the latitude and longitude can be used to plot the earthquake's location on a map.
 *******************************************************************************************************************************************************
+Query 2
+
 SELECT id,place,  SQRT(POWER(69.1 * (latitude - 40.7128), 2) + POWER(69.1 * (-74.0060 - longitude) * COS(latitude / 57.3), 2)) AS distance
 FROM earthquakes_table
 ORDER BY distance ASC;
@@ -126,6 +128,7 @@ The great-circle distance, which is the shortest distance between two points on 
 Geographic information systems (GIS) and location-based applications frequently employ the Haversine formula to determine the separation between two points that are identified by their latitude and longitude.
 This search is helpful for locating earthquakes that occur close to New York City overall.
 **********************************************************************************************************************************************************
+Query 3 
 
 SELECT mag, ST_Area(ST_Transform(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), 3857)) as area 
 FROM earthquakes_table
@@ -141,6 +144,7 @@ The magnitude, longitude, and latitude of the earthquakes are grouped together i
 The HAVING condition eliminates groupings where there have been less than two earthquakes.
 *************************************************************************************************************************************************************
 **Sorting and Limit Executions :**
+
 SELECT *
 FROM earthquakes_table
 WHERE mag >= 4.0 AND type = 'earthquake'
@@ -159,6 +163,9 @@ This search will pull all columns from the earthquakes_table whose types are "ea
 
  
 **Optimization of queries for faster execution**
+
+Query  1
+
 SELECT mag, ST_Area(ST_Transform(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), 3857)) as area FROM earthquakes_table WHERE mag > 4 GROUP BY mag, longitude , latitude HAVING COUNT(*) < 2;
 
 To optimize this query, we can create an index on the mag column as it is used in the WHERE clause, and an index on the longitude and latitude columns as they are used in the GROUP BY clause. This will speed up the execution time by reducing the amount of data that needs to be scanned to satisfy the query conditions.
@@ -173,6 +180,7 @@ GROUP BY mag, longitude , latitude
 HAVING COUNT(*) < 2;
  
 ************************************************************************************************************************************************************
+Query 2
 
 SELECT id,place, SQRT(POWER(69.1 * (latitude - 40.7128), 2) + POWER(69.1 * (-74.0060 - longitude) * COS(latitude / 57.3), 2)) AS distance FROM earthquakes_table ORDER BY distance ASC;
 To optimize this query is to create an index on the longitude and latitude columns to speed up the sorting process.
@@ -190,6 +198,8 @@ Result comparisons after query optimization:
 upon comparinng  the execution results of optmized query is 115 millisecond where original query had 143 millisecond as execution time, so optimized and faster than earlier.
 
 *******************************************************************************************************************************************************
+Query 3
+
 SELECT latitude, longitude, place
 FROM earthquakes_table
 WHERE mag >= 4.0 AND type = 'earthquake';
@@ -206,6 +216,7 @@ upon comparinng  the execution results of optmized query is 052 millisecond wher
 
 
 **N optimization of the queries:**
+
 Beyond simple query optimization, N-optimization requires the use of more sophisticated optimization techniques. The following are some methods that can be applied:
 
 Indexing: Building indexes on the columns that are utilized in the WHERE, JOIN, and GROUP BY clauses can greatly enhance query performance. It decreases the requirement for full table scans by enabling the database engine to locate and obtain the necessary data rapidly.
