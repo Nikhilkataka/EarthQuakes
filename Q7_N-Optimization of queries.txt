@@ -1,0 +1,17 @@
+Beyond simple query optimization, N-optimization requires the use of more sophisticated optimization techniques. The following are some methods that can be applied:
+
+Indexing: Building indexes on the columns that are utilized in the WHERE, JOIN, and GROUP BY clauses can greatly enhance query performance. It decreases the requirement for full table scans by enabling the database engine to locate and obtain the necessary data rapidly.
+Partitioning: By lowering the quantity of data that needs to be scanned, splitting a big table into smaller, more manageable segments can boost performance
+Materialized views: By decreasing the amount of processing necessary at query time, precomputed views of frequently accessible data can increase performance.
+Query caching: Keeping the answers to frequently used queries in memory might cut down on the amount of time it takes to respond to a query.
+Denormalization: By removing the requirement for complex joins, precomputing join tables or redundantly embedding data can increase performance.
+Rewriting complex queries into smaller ones that accomplish the same task can increase performance by cutting down on the amount of processing necessary.
+Query parallelization: Using many CPU cores, splitting a large query into smaller ones that may be processed simultaneously can enhance performance.
+These methods call for a higher level of database administration expertise and might not be appropriate in all circumstances, but when used properly, they can result in significant performance improvements.
+
+
+
+
+
+
+
