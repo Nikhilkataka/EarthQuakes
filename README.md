@@ -175,21 +175,26 @@ This search will pull all columns from the earthquakes_table whose types are "ea
  **************************************************************************************************************************************************************
 **Optimization of queries for faster execution**
 
-Query  1
+Query 3
 
-SELECT mag, ST_Area(ST_Transform(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), 3857)) as area FROM earthquakes_table WHERE mag > 4 GROUP BY mag, longitude , latitude HAVING COUNT(*) < 2;
+CREATE INDEX idx_place ON earthquakes_table(place);	
+SELECT place, COUNT(*) as num_earthquakes, AVG(mag) as avg_magnitude
+FROM (
+  SELECT *
+  FROM earthquakes_table
+  WHERE place IS NOT NULL
+) AS filtered
+GROUP BY place
+HAVING COUNT(*) >= 10
+ORDER BY num_earthquakes DESC;
 
-To optimize this query, we can create an index on the mag column as it is used in the WHERE clause, and an index on the longitude and latitude columns as they are used in the GROUP BY clause. This will speed up the execution time by reducing the amount of data that needs to be scanned to satisfy the query conditions.
-The optimized query would be:
-CREATE INDEX mag_index ON earthquakes_table (mag);
-CREATE INDEX lon_lat_index ON earthquakes_table (longitude, latitude);
+The first line creates an index on the place column in the earthquakes_table table, which can speed up queries that involve searching or grouping by this column.
 
-SELECT mag, ST_Area(ST_Transform(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), 3857)) as area 
-FROM earthquakes_table
-WHERE mag > 4
-GROUP BY mag, longitude , latitude
-HAVING COUNT(*) < 2;
- 
+The second query is a modification of the original query that filters out rows where the place column is null before grouping the results. By doing this filtering step first, the query can potentially reduce the amount of data that needs to be processed and improve performance.
+
+The use of a subquery also allows for better optimization by giving the database engine more control over the query plan. The subquery creates a temporary table of filtered results that can be optimized separately from the outer query.
+
+Overall, the combination of creating an index, filtering out null values, and using a subquery can help to optimize the performance of this query.
 ************************************************************************************************************************************************************
 Query 2
 
@@ -209,11 +214,13 @@ Result comparisons after query optimization:
 upon comparinng  the execution results of optmized query is 115 millisecond where original query had 143 millisecond as execution time, so optimized and faster than earlier.
 
 *******************************************************************************************************************************************************
-Query 3
+Query 1
 
 SELECT latitude, longitude, place
 FROM earthquakes_table
 WHERE mag >= 4.0 AND type = 'earthquake';
+
+
 since this query does not involve any aggregations or complex spatial operations, there is not much scope for optimization. However, we can still try to optimize it by creating an index on the mag and type columns, which will speed up the filtering process.
 CREATE INDEX mag_type_index ON earthquakes_table (mag, type);
 SELECT latitude, longitude, place
