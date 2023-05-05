@@ -1,5 +1,84 @@
 # EarthQuakes
 
+This entire project is done in postgresql  (PGAdmin4) with extracted data from https://www.usgs.gov/programs/earthquake-hazards.......
+the CSV file used for this project is  [bigdataearquake.csv](https://github.com/Nikhilkataka/EarthQuakes/files/11409071/bigdataearquake.csv)
+
+Created the table using query below..
+
+-- Table: public.earthquakes_table
+
+-- DROP TABLE IF EXISTS public.earthquakes_table;
+
+CREATE TABLE IF NOT EXISTS public.earthquakes_table
+(
+    "time" timestamp without time zone,
+    latitude double precision,
+    longitude double precision,
+    depth double precision,
+    mag double precision,
+    magtype character varying(10) COLLATE pg_catalog."default",
+    nst integer,
+    gap double precision,
+    dmin double precision,
+    rms double precision,
+    net character varying(10) COLLATE pg_catalog."default",
+    id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    updated timestamp without time zone,
+    place character varying(255) COLLATE pg_catalog."default",
+    type character varying(50) COLLATE pg_catalog."default",
+    horizontal double precision,
+    deptherror double precision,
+    magerror double precision,
+    magnst integer,
+    status character varying(50) COLLATE pg_catalog."default",
+    locationsource character varying(50) COLLATE pg_catalog."default",
+    magsource character varying(50) COLLATE pg_catalog."default",
+    CONSTRAINT earthquakes_table_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.earthquakes_table
+    OWNER to postgres;
+-- Index: idx_earthquakes_table_lat_long
+
+-- DROP INDEX IF EXISTS public.idx_earthquakes_table_lat_long;
+
+CREATE INDEX IF NOT EXISTS idx_earthquakes_table_lat_long
+    ON public.earthquakes_table USING btree
+    (latitude ASC NULLS LAST, longitude ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: lon_lat_index
+
+-- DROP INDEX IF EXISTS public.lon_lat_index;
+
+CREATE INDEX IF NOT EXISTS lon_lat_index
+    ON public.earthquakes_table USING btree
+    (longitude ASC NULLS LAST, latitude ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: mag_index
+
+-- DROP INDEX IF EXISTS public.mag_index;
+
+CREATE INDEX IF NOT EXISTS mag_index
+    ON public.earthquakes_table USING btree
+    (mag ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: mag_type_index
+
+-- DROP INDEX IF EXISTS public.mag_type_index;
+
+CREATE INDEX IF NOT EXISTS mag_type_index
+    ON public.earthquakes_table USING btree
+    (mag ASC NULLS LAST, type COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+
+
+
+
+
 **Retrieve Locations of specific features**
 
 SELECT latitude, longitude, place
