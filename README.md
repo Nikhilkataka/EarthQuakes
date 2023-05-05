@@ -129,20 +129,30 @@ The great-circle distance, which is the shortest distance between two points on 
 Geographic information systems (GIS) and location-based applications frequently employ the Haversine formula to determine the separation between two points that are identified by their latitude and longitude.
 This search is helpful for locating earthquakes that occur close to New York City overall.
 **********************************************************************************************************************************************************
-Query 3 
 
-SELECT mag, ST_Area(ST_Transform(ST_SetSRID(ST_MakePoint(longitude, latitude), 4326), 3857)) as area 
+Query 3
+
+SELECT place, COUNT(*) as num_earthquakes, AVG(mag) as avg_magnitude
 FROM earthquakes_table
-WHERE mag > 4
-GROUP BY mag, longitude , latitude
-HAVING COUNT(*) < 2;
+GROUP BY place
+HAVING COUNT(*) >= 10
+ORDER BY num_earthquakes DESC;
 
-Explanantion:
-When the magnitude is larger than 4 and the number of earthquakes for each unique combination of magnitude, longitude, and latitude is fewer than 2, a SQL query will obtain the magnitude and area of earthquakes from the earthquakes_table.
-The area and earthquake magnitude are first chosen in the inquiry. The EPSG:3857 coordinate reference system (CRS) is used to compute the area of a point geometry using the ST_Area function after converting the coordinates from the EPSG:4326 CRS.
-The earthquakes whose magnitude is less than or equal to 4 are excluded by the WHERE clause.
-The magnitude, longitude, and latitude of the earthquakes are grouped together in the GROUP BY phrase.
-The HAVING condition eliminates groupings where there have been less than two earthquakes.
+Explanation:
+For locations where there have been at least 10 earthquakes, this query provides data on the number of earthquakes that have happened there as well as their average magnitude.
+
+The SELECT statement, which is used to specify the columns to be returned, is followed by the words "place," "COUNT(*) as num_earthquakes," and "AVG(mag) as avg_magnitude."
+
+The name of the place where the earthquake happened is place.
+The number of earthquakes that happened in each location is returned by COUNT(*).
+The average magnitude of earthquakes that occurred in each location is returned by AVG(mag).
+Next, the earthquakes_table table's name is specified in the FROM statement, where it will be used to obtain the data.
+The GROUP BY clause organizes the rows geographically. This indicates that the COUNT(*) and AVG(mag) functions are computed for each unique value of place.
+
+Only groups with a row count higher than or equal to 10 are included in the results after the HAVING statement filters the data.
+
+The ORDER BY clause then arranges the outcomes according to the num_earthquakes column in descending order.
+
 *************************************************************************************************************************************************************
 **Sorting and Limit Executions :**
 
