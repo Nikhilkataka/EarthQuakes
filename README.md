@@ -3,7 +3,7 @@
 This entire project is done in postgresql  (PGAdmin4) with extracted data from https://www.usgs.gov/programs/earthquake-hazards.......
 the CSV file used for this project is  [bigdataearquake.csv](https://github.com/Nikhilkataka/EarthQuakes/files/11409071/bigdataearquake.csv)
 
-Created the table using query below..
+Created the table using query below.. inside the public schema after creating the database for this project....
 
 -- Table: public.earthquakes_table
 
